@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Student Housing for Aina — Psychology</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Hanken+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#f6f1e7;
+    --paper-2:#efe7d7;
+    --ink:#241f1a;
+    --ink-soft:#5b5249;
+    --line:#ddd2bd;
+    --mtp:#c1582f;       /* Montpellier — terracotta */
+    --mtp-soft:#f3e0d4;
+    --ang:#3f6b4f;       /* Angers — verdant */
+    --ang-soft:#dde9df;
+    --card:#fffdf8;
+    --shadow:0 1px 2px rgba(60,45,30,.05),0 10px 30px -12px rgba(60,45,30,.18);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:'Hanken Grotesk',sans-serif;
+    background:var(--paper);
+    color:var(--ink);
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+    background-image:radial-gradient(rgba(120,90,50,.035) 1px,transparent 1px);
+    background-size:4px 4px;
+  }
+  .wrap{max-width:1140px;margin:0 auto;padding:0 22px}
+
+  /* ---------- header ---------- */
+  header{padding:54px 0 26px;border-bottom:1px solid var(--line)}
+  .eyebrow{font-size:.74rem;letter-spacing:.22em;text-transform:uppercase;color:var(--ink-soft);font-weight:600}
+  h1{font-family:'Fraunces',serif;font-weight:500;font-size:clamp(2.3rem,5.4vw,3.7rem);line-height:1.04;margin:.32em 0 .25em;letter-spacing:-.01em}
+  h1 em{font-style:italic;color:var(--mtp)}
+  .lede{font-size:1.06rem;color:var(--ink-soft);max-width:60ch}
+
+  /* ---------- correction callout ---------- */
+  .flag{
+    margin:26px 0 0;background:var(--mtp-soft);border:1px solid #e6c3ac;
+    border-left:4px solid var(--mtp);border-radius:12px;padding:16px 18px;
+    display:flex;gap:13px;align-items:flex-start;max-width:70ch;
+  }
+  .flag svg{flex:0 0 auto;margin-top:2px}
+  .flag b{font-weight:700}
+  .flag p{font-size:.95rem;color:#5a3a28}
+
+  /* ---------- tabs ---------- */
+  .tabs{position:sticky;top:0;z-index:20;background:var(--paper);
+    border-bottom:1px solid var(--line);padding:14px 0;margin-top:30px;
+    backdrop-filter:blur(6px);background:rgba(246,241,231,.86)}
+  .tabrow{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+  .tab{font-family:'Hanken Grotesk';font-size:.96rem;font-weight:600;cursor:pointer;
+    border:1px solid var(--line);background:var(--card);color:var(--ink-soft);
+    padding:9px 18px;border-radius:999px;transition:.18s;display:flex;gap:8px;align-items:center}
+  .tab .dot{width:9px;height:9px;border-radius:50%}
+  .tab[data-city="mtp"] .dot{background:var(--mtp)}
+  .tab[data-city="ang"] .dot{background:var(--ang)}
+  .tab.active{color:#fff}
+  .tab.active[data-city="mtp"]{background:var(--mtp);border-color:var(--mtp)}
+  .tab.active[data-city="ang"]{background:var(--ang);border-color:var(--ang)}
+  .tab.active .dot{background:#fff}
+  .count{margin-left:auto;font-size:.84rem;color:var(--ink-soft)}
+
+  /* ---------- city intro ---------- */
+  .cityhead{padding:36px 0 6px}
+  .cityhead h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.9rem;letter-spacing:-.01em;display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+  .pill{font-family:'Hanken Grotesk';font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#fff;padding:4px 10px;border-radius:999px}
+  .campusline{margin-top:8px;color:var(--ink-soft);font-size:.97rem;max-width:74ch}
+  .campusline .k{color:var(--ink);font-weight:600}
+
+  /* ---------- grid + cards ---------- */
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:22px;padding:24px 0 8px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:18px;overflow:hidden;box-shadow:var(--shadow);display:flex;flex-direction:column}
+  .cardtop{padding:18px 20px 14px;border-top:5px solid}
+  .badge{font-size:.66rem;font-weight:700;letter-spacing:.13em;text-transform:uppercase;padding:3px 9px;border-radius:6px;display:inline-block;margin-bottom:9px}
+  .cname{font-family:'Fraunces',serif;font-size:1.32rem;font-weight:500;line-height:1.12;letter-spacing:-.01em}
+  .addr{font-size:.88rem;color:var(--ink-soft);margin-top:7px;display:flex;gap:7px;align-items:flex-start}
+  .addr svg{flex:0 0 auto;margin-top:3px;opacity:.6}
+
+  .dist{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+  .dist .d{padding:12px 8px;text-align:center;border-right:1px solid var(--line)}
+  .dist .d:last-child{border-right:none}
+  .dist .ic{height:22px;display:flex;justify-content:center;align-items:center;opacity:.75}
+  .dist .t{font-weight:700;font-size:1.02rem;margin-top:4px;line-height:1}
+  .dist .l{font-size:.66rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft);margin-top:3px}
+  .km{text-align:center;font-size:.78rem;color:var(--ink-soft);padding:8px 0 0;font-weight:600}
+
+  .body{padding:16px 20px 4px;flex:1}
+  .sec{font-size:.68rem;letter-spacing:.13em;text-transform:uppercase;color:var(--ink-soft);font-weight:700;margin:14px 0 7px}
+  .sec:first-child{margin-top:2px}
+  .chips{display:flex;flex-wrap:wrap;gap:6px}
+  .chip{font-size:.76rem;background:var(--paper-2);border:1px solid var(--line);padding:3px 9px;border-radius:7px;color:#4a4138}
+
+  .pricerow{display:flex;align-items:baseline;gap:8px;margin-top:4px}
+  .price{font-family:'Fraunces',serif;font-size:1.7rem;font-weight:600}
+  .price small{font-family:'Hanken Grotesk';font-size:.8rem;font-weight:500;color:var(--ink-soft)}
+  .est{font-size:.74rem;color:var(--ink-soft)}
+
+  .avail{display:inline-flex;align-items:center;gap:7px;font-size:.83rem;font-weight:600;padding:5px 11px;border-radius:999px;margin-top:2px}
+  .avail .s{width:8px;height:8px;border-radius:50%}
+  .a-open{background:#e4efe2;color:#2f5a38}.a-open .s{background:#3f8f4f}
+  .a-check{background:#fbf0d8;color:#8a6212}.a-check .s{background:#d39b1f}
+
+  .review{font-size:.88rem;color:#4a4138;background:var(--paper-2);border-radius:10px;padding:11px 13px;margin-top:2px}
+  .stars{color:#c79100;font-weight:700;font-size:.84rem;letter-spacing:.05em;margin-bottom:3px;display:block}
+  .review .muted{color:var(--ink-soft);font-style:italic}
+
+  .actions{display:flex;gap:9px;padding:16px 20px 20px}
+  .btn{flex:1;text-align:center;text-decoration:none;font-weight:600;font-size:.9rem;padding:11px 8px;border-radius:11px;transition:.18s;border:1px solid transparent}
+  .btn-1{color:#fff}
+  .btn-2{background:var(--card);border-color:var(--line);color:var(--ink)}
+  .btn:hover{transform:translateY(-1px)}
+  .btn-2:hover{background:var(--paper-2)}
+
+  .extra{margin:6px 0 4px;padding:16px 18px;background:var(--card);border:1px dashed var(--line);border-radius:14px;font-size:.9rem;color:var(--ink-soft)}
+  .extra b{color:var(--ink)}
+
+  /* ---------- caveats / footer ---------- */
+  .notes{margin:46px 0 0;padding:26px 0 60px;border-top:1px solid var(--line)}
+  .notes h3{font-family:'Fraunces',serif;font-weight:500;font-size:1.3rem;margin-bottom:12px}
+  .notes ul{list-style:none;display:grid;gap:10px;max-width:80ch}
+  .notes li{font-size:.92rem;color:var(--ink-soft);padding-left:22px;position:relative}
+  .notes li::before{content:"";position:absolute;left:0;top:9px;width:7px;height:7px;border-radius:2px;background:var(--mtp)}
+  .src{font-size:.8rem;color:var(--ink-soft);margin-top:22px}
+  .src a{color:var(--ink-soft)}
+  .hidden{display:none}
+  @media(max-width:560px){.actions{flex-direction:column}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="eyebrow">Accommodation shortlist · Licence de Psychologie</div>
+    <h1>A place for <em>Aina</em> to study<br>psychology</h1>
+    <p class="lede">Private student residences (specialised dorms, not flats) ranked by proximity to the exact campus where the Psychology degree is taught — at each of the two universities under consideration.</p>
+
+    <div class="flag">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#c1582f" stroke-width="2"><path d="M12 9v4m0 4h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/></svg>
+      <p><b>Worth knowing about Montpellier:</b> Psychology is <b>not</b> taught at Université de Montpellier (the one originally linked). It is taught at <b>Université Paul-Valéry Montpellier 3</b> — a separate university — on the campus at Route de Mende, north of the city. All Montpellier options below are measured to that campus.</p>
+    </div>
+  </div>
+</header>
+
+<div class="tabs">
+  <div class="wrap tabrow">
+    <button class="tab active" data-city="mtp"><span class="dot"></span>Montpellier · Paul-Valéry 3</button>
+    <button class="tab" data-city="ang"><span class="dot"></span>Angers · Belle-Beille</button>
+    <span class="count" id="count"></span>
+  </div>
+</div>
+
+<main class="wrap" id="app"></main>
+
+<div class="wrap notes">
+  <h3>How to read this — and what to verify</h3>
+  <ul>
+    <li><b>Prices</b> are the residences' advertised <i>"from"</i> rates, charges included (cc), and move with room type, floor and intake year — treat them as indicative and confirm the exact figure when booking.</li>
+    <li><b>Availability</b> changes constantly and usually sits behind each booking portal, so it's marked <i>"check"</i> rather than guaranteed. Tell me Aina's intended start date and I can try to pull live availability.</li>
+    <li><b>Distances &amp; times</b> use each site's measured distance to the university; walking (~5 km/h) and cycling (~15 km/h) times are estimates. For the closest residences, the campus is genuinely a short walk, so public transport adds nothing.</li>
+    <li><b>Photos / virtual tours</b> open on the official residence pages — I've linked galleries rather than copying images.</li>
+    <li><b>Reviews</b> are summarised where they exist and noted as limited where they don't; they're a starting point, not a verdict.</li>
+    <li><b>Cheaper public backup:</b> if Aina qualifies for a bourse, CROUS residences sit right by both campuses at roughly €250–410/month — say the word and I'll add them as a fallback tier.</li>
+  </ul>
+  <p class="src">Sources: Parcoursup &amp; Onisep (campus of the Psychology degree), Studylease, Nexity Studéa, Nemea, UXCO, Cap'Etudes, Kley, residence official sites. Compiled June 2026 · Figures indicative — verify before booking.</p>
+</div>
+
+<script>
+const DATA = {
+  mtp:{
+    accent:"#c1582f", soft:"#f3e0d4", label:"Montpellier",
+    campus:`<span class="k">Psychology campus:</span> Université Paul-Valéry Montpellier 3 — UFR5 « Sciences du Sujet et de la Société », Route de Mende, 34199 Montpellier. Served by Tram line 1 and local buses (Vert Bois).`,
+    items:[
+      {
+        name:"Studéa Paul Valéry 2", brand:"Nexity Studéa",
+        addr:"≈1424 route de Mende, 34090 Montpellier (next to campus)",
+        km:"0.28 km", walk:"~4 min", bike:"~1–2 min", bus:"Walkable",
+        facilities:["Furnished studios","Free high-speed Wi-Fi","Study room / cafeteria","Bike room","Parking","Laundry","Daily housekeeper","Video surveillance","Underfloor heating + hot water incl.","Linen rental","Breakfast option"],
+        price:"581", unit:"/mo cc",
+        avail:"check", availText:"Check availability",
+        rating:"★★★★☆ · mixed-positive",
+        review:"Tenants call it calm and very well placed for the universities; some flag dated bathrooms / humidity.",
+        book:"https://www.nexity-studea.com/en/student-housing/montpellier/studea-paul-valery-2-po0000208",
+        photos:"https://www.studylease.com/residence-etudiante-studea-paul-valery-2-a-montpellier"
+      },
+      {
+        name:"Studéa Montferrand", brand:"Nexity Studéa",
+        addr:"Avenue du Val de Montferrand area, 34090 Montpellier",
+        km:"0.58 km", walk:"~7–8 min", bike:"~3 min", bus:"Walkable",
+        facilities:["Furnished","Wi-Fi","Laundry","Bike room","On-site manager","Video surveillance","Tram & bus at the door"],
+        price:"593", unit:"/mo cc",
+        avail:"check", availText:"Check availability",
+        rating:"Limited reviews",
+        review:"Few residence-specific reviews online; the Studéa brand is generally rated functional, clean and well-managed.",
+        book:"https://www.studylease.com/residence-etudiante-studea-montferrand-a-montpellier",
+        photos:"https://www.studylease.com/residence-etudiante-studea-montferrand-a-montpellier"
+      },
+      {
+        name:"UXCO Tropicampus", brand:"UXCO Group",
+        addr:"Agropolis zone, north Montpellier, 34090",
+        km:"1.18 km", walk:"~15 min", bike:"~5 min", bus:"~8–10 min",
+        facilities:["Modern furnished","Green setting (Lunaret zoo / Lez river)","Study & common areas","Wi-Fi","Laundry","Bike storage","Secure access"],
+        price:"516", unit:"/mo cc",
+        avail:"check", availText:"Check availability",
+        rating:"Limited reviews",
+        review:"Lowest entry price of the close-in private options; praised for its quiet, leafy location, though a touch further out.",
+        book:"https://www.studylease.com/residence-etudiante-tropicampus-a-montpellier",
+        photos:"https://www.studylease.com/residence-etudiante-tropicampus-a-montpellier"
+      },
+      {
+        name:"Nemea Appart'Etud Paul Valéry", brand:"Nemea",
+        addr:"Boutonnet district, 34000 Montpellier (near hyper-centre)",
+        km:"1.43 km", walk:"~18 min", bike:"~6 min", bus:"~12 min",
+        facilities:["118 T1 / T1bis (18–25 m²)","Equipped kitchen","Living area w/ sofa bed & desk","TV + internet","CAF eligible"],
+        price:"662", unit:"/mo cc",
+        avail:"check", availText:"Check availability",
+        rating:"Limited reviews",
+        review:"More central / lively position by Boutonnet; best if Aina wants city life over campus-doorstep convenience.",
+        book:"https://www.nemea-residence-etudiante.com/en/montpellier-paul-valery",
+        photos:"https://www.studylease.com/residence-etudiante-nemea-montpellier-paul-valery-a-montpellier"
+      }
+    ]
+  },
+  ang:{
+    accent:"#3f6b4f", soft:"#dde9df", label:"Angers",
+    campus:`<span class="k">Psychology campus:</span> Université d'Angers — Faculté des Lettres, Langues et Sciences Humaines (LLSH), Campus Belle-Beille, 11 bd Lavoisier, 49045 Angers. Served by Irigo buses 1, 4, 6 & 14.`,
+    note:`Belle-Beille leans heavily on <b>public CROUS</b> housing, so the private-residence pool is smaller than Montpellier's — but the two below sit right on the campus.`,
+    items:[
+      {
+        name:"Kley Angers Campus", brand:"Kley",
+        addr:"In the heart of the Belle-Beille campus, 49000 Angers",
+        km:"≈0.3–0.5 km", walk:"~5 min", bike:"~2 min", bus:"Walkable",
+        facilities:["Studios 19–30 m² + shared T6 flats","Cinema room « le Kosy »","Coworking space","1000 m² planted patio","Gym","Lounge « le Squat »","All-inclusive bills","On-site team (Mon–Fri 8:30–19:00)","Bike parking","Secure access","Virtual tour online"],
+        price:"~600+", unit:"/mo (2026 rates due Apr)",
+        est:"premium tier — verify",
+        avail:"open", availText:"Pre-booking open · 2026 intake",
+        rating:"★★★★★ ≈ 9/10",
+        review:"Highly rated for cleanliness, quiet and its on-campus location; the standout premium choice in Angers.",
+        book:"https://www.kley.fr/en/student-residence/angers/kley-angers/",
+        photos:"https://www.kley.fr/en/student-residence/angers/kley-angers/accommodations/"
+      },
+      {
+        name:"Cap'Etudes Belle-Beille", brand:"Cap'Etudes",
+        addr:"14 rue Jean-Baptiste Lamarck / 18–20 bd Victor Beaussier, 49000 Angers",
+        km:"≈0.6 km", walk:"~7–8 min", bike:"~3 min", bus:"~3 min",
+        facilities:["Furnished T1 (17–28 m²)","Gym","Coworking space","Study room","Lounge / TV room","Bike room","Lift & disabled access","Package reception","On-site manager","Video surveillance","Linen & dish kits","Laundry / parking (extra)","ALS eligible"],
+        price:"530", unit:"/mo cc",
+        est:"€595/mo for 25–28 m² · dossier €350 · deposit €450",
+        avail:"open", availText:"Bookable online",
+        rating:"Limited reviews",
+        review:"Few public reviews, but a well-equipped, full-service residence literally inside the campus where Psychology is taught.",
+        book:"https://www.cap-etudes.com/residence/belle-beille-ii/",
+        photos:"https://www.studylease.com/residence-etudiante-cap-etudes-belle-beille-a-angers"
+      }
+    ],
+    extra:`<b>Also worth a look (a short bus ride away):</b> Les Estudines residences near Angers Saint-Laud / Saint-Serge (from ≈€680/mo, ~3 km — bus to Belle-Beille). Good if the two campus residences are full.`
+  }
+};
+
+const app=document.getElementById("app");
+const countEl=document.getElementById("count");
+
+function availHTML(it){
+  if(it.avail==="open") return `<span class="avail a-open"><span class="s"></span>${it.availText}</span>`;
+  return `<span class="avail a-check"><span class="s"></span>${it.availText}</span>`;
+}
+
+function card(it,c){
+  const est = it.est ? `<span class="est"> · ${it.est}</span>` : (it.price.includes("+")?`<span class="est"> · indicative</span>`:`<span class="est"> · from, indicative</span>`);
+  return `
+  <article class="card">
+    <div class="cardtop" style="border-color:${c.accent}">
+      <span class="badge" style="background:${c.soft};color:${c.accent}">Student residence · ${it.brand}</span>
+      <div class="cname">${it.name}</div>
+      <div class="addr"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>${it.addr}</div>
+    </div>
+
+    <div class="dist">
+      <div class="d"><div class="ic">${ICON.walk}</div><div class="t">${it.walk}</div><div class="l">Walk</div></div>
+      <div class="d"><div class="ic">${ICON.bike}</div><div class="t">${it.bike}</div><div class="l">Bike</div></div>
+      <div class="d"><div class="ic">${ICON.bus}</div><div class="t">${it.bus}</div><div class="l">Transit</div></div>
+    </div>
+    <div class="km">${it.km} to the Psychology campus</div>
+
+    <div class="body">
+      <div class="sec">Facilities</div>
+      <div class="chips">${it.facilities.map(f=>`<span class="chip">${f}</span>`).join("")}</div>
+
+      <div class="sec">Price</div>
+      <div class="pricerow"><span class="price">€${it.price}<small> ${it.unit}</small></span></div>
+      <div>${est}</div>
+
+      <div class="sec">Availability</div>
+      ${availHTML(it)}
+
+      <div class="sec">Student reviews</div>
+      <div class="review"><span class="stars">${it.rating}</span><span class="muted">${it.review}</span></div>
+    </div>
+
+    <div class="actions">
+      <a class="btn btn-1" style="background:${c.accent}" href="${it.book}" target="_blank" rel="noopener">Book / enquire</a>
+      <a class="btn btn-2" href="${it.photos}" target="_blank" rel="noopener">Photos &amp; tour</a>
+    </div>
+  </article>`;
+}
+
+const ICON={
+  walk:`<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#3a342d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="13" cy="4" r="1.6"/><path d="m10 8 3-1 2 3 2.5 1M11 7l-2 4 1 3 1.5 5M10 14l-2.5 1L6 19"/></svg>`,
+  bike:`<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#3a342d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="5.5" cy="17.5" r="3.5"/><circle cx="18.5" cy="17.5" r="3.5"/><path d="M15 17.5 12 8h2m-6.5 9.5L11 8l4 .5"/><circle cx="12" cy="4.5" r="1"/></svg>`,
+  bus:`<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#3a342d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="14" rx="2"/><path d="M4 11h16M8 17v2M16 17v2"/><circle cx="8" cy="14" r="0.6"/><circle cx="16" cy="14" r="0.6"/></svg>`
+};
+
+function render(city){
+  const c=DATA[city];
+  let html=`<div class="cityhead">
+      <h2>${c.label} <span class="pill" style="background:${c.accent}">${c.items.length} residences</span></h2>
+      <p class="campusline">${c.campus}</p>
+      ${c.note?`<p class="campusline">${c.note}</p>`:""}
+    </div>
+    <div class="grid">${c.items.map(it=>card(it,c)).join("")}</div>`;
+  if(c.extra) html+=`<div class="extra">${c.extra}</div>`;
+  app.innerHTML=html;
+  countEl.textContent = city==="mtp" ? "Sorted by distance — closest first" : "Sorted by distance — closest first";
+}
+
+document.querySelectorAll(".tab").forEach(t=>{
+  t.addEventListener("click",()=>{
+    document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
+    t.classList.add("active");
+    render(t.dataset.city);
+    document.documentElement.style.setProperty('--mtp', DATA.mtp.accent);
+  });
+});
+render("mtp");
+</script>
+</body>
+</html>
